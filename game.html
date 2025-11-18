@@ -3,12 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Name - Page Title</title>
+    <title>Hotdog vs Condiments Game</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/game.css">
+    <style>
+        .game-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            text-align: center;
+        }
+
+        #gameCanvas {
+            background: #f8f8f8;
+            border: 2px solid #333;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .game-controls {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .score {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 1rem 0;
+        }
+
+        .instructions {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: left;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .instructions h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .instructions ul {
+            list-style-type: disc;
+            padding-left: 2rem;
+        }
+
+        /* Mobile touch controls */
+        .mobile-controls {
+            display: none;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .touch-button {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            margin: 10px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        .touch-button:active {
+            background: #45a049;
+            transform: scale(0.95);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-controls {
+                display: block;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation Menu (same on all pages) -->
+    <!-- Navigation Menu -->
     <nav>
         <ul>
             <li><a href="index.html">Home</a></li>
@@ -20,19 +101,104 @@
         </ul>
     </nav>
 
-    <h1>Game Page</h1>
+    <main class="game-container">
+        <h1>Hotdog vs Condiments</h1>
+        
+        <div class="instructions">
+            <h3>How to Play:</h3>
+            <ul>
+                <li>Use Left and Right Arrow keys to move the hotdog</li>
+                <li>Press S to shoot mustard blasts</li>
+                <li>Destroy all condiment bottles in each level</li>
+                <li>Don't let them reach the bottom of the screen</li>
+                <li>Click "Next Level" to continue when you clear a level</li>
+                <li>Each level gets 2.5% faster!</li>
+                <li>Use touch controls below for mobile play</li>
+                <li><strong>If the game freezes, refresh the page to continue playing</strong></li>
+            </ul>
+        </div>
 
-    <!-- Your page content goes here -->
-    <main>
-        <!-- Page-specific content -->
+        <div class="game-controls">
+            <div class="score">Score: <span id="score">0</span></div>
+        </div>
+
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+        <!-- Mobile touch controls -->
+        <div class="mobile-controls">
+            <button class="touch-button" id="leftBtn">←</button>
+            <button class="touch-button" id="shootBtn">S</button>
+            <button class="touch-button" id="rightBtn">→</button>
+        </div>
     </main>
 
-    <!-- Footer (same on all pages) -->
     <footer>
-        <p>&copy; 2025 Your Name. All rights reserved.</p>
+        <p>&copy; 2025 John Gannucci. All rights reserved.</p>
     </footer>
 
-    <script src="js/script.js"></script>
-    <script src="js/game.js"></script>
+    <script src="js/hotdog-game.js"></script>
+    <script>
+        // Mobile controls functionality
+        let gameInstance = null;
+        
+        // Wait for game to load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                gameInstance = document.querySelector('canvas').gameInstance;
+                setupMobileControls();
+            }, 100);
+        });
+        
+        function setupMobileControls() {
+            const leftBtn = document.getElementById('leftBtn');
+            const rightBtn = document.getElementById('rightBtn');
+            const shootBtn = document.getElementById('shootBtn');
+            
+            // Left button
+            leftBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                if (gameInstance) {
+                    gameInstance.keys['ArrowLeft'] = true;
+                }
+            });
+            
+            leftBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                if (gameInstance) {
+                    gameInstance.keys['ArrowLeft'] = false;
+                }
+            });
+            
+            // Right button
+            rightBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                if (gameInstance) {
+                    gameInstance.keys['ArrowRight'] = true;
+                }
+            });
+            
+            rightBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                if (gameInstance) {
+                    gameInstance.keys['ArrowRight'] = false;
+                }
+            });
+            
+            // Shoot button
+            shootBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                if (gameInstance) {
+                    gameInstance.keys['KeyS'] = true;
+                }
+            });
+            
+            shootBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                if (gameInstance) {
+                    gameInstance.keys['KeyS'] = false;
+                }
+            });
+        }
+    </script>
 </body>
 </html>
